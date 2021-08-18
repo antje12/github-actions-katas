@@ -24,6 +24,8 @@ jobs:
         with:
           name: code
           path: .
+      - name: set-permissions
+        run: chmod +x ci/build-app.sh
       - name: test-step
         run: ci/unit-test-app.sh
   Build:
@@ -37,5 +39,7 @@ jobs:
         with:
           name: code
           path: .
+      - name: set-permissions
+        run: chmod +x ci/build-app.sh
       - name: build-step
         run: ci/build-app.sh
