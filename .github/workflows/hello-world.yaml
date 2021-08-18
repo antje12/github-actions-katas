@@ -1,18 +1,41 @@
-name: hello-world
+name: Java CI
 on: push
 jobs:
-  my-job:
+  Clone-down:
+    name: clone-down-job
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
     steps:
       - name: checkout-step
         uses: actions/checkout@v2
-      - name: build-step
-        run: ci/build-app.sh
       - name: upload-repo
         uses: actions/upload-artifact@v2
         with:
           name: code
           path: .
+  Test:
+    name: test-job
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    needs: Clone-down
+    steps:
+      - name: download-repo
+        uses: actions/download-artifact@v2
+        with:
+          name: code
+          path: .
       - name: test-step
         run: ci/unit-test-app.sh
+  Build:
+    name: build-job
+    runs-on: ubuntu-latest
+    container: gradle:6-jdk11
+    needs: Clone-down
+    steps:
+      - name: download-repo
+        uses: actions/download-artifact@v2
+        with:
+          name: code
+          path: .
+      - name: build-step
+        run: ci/build-app.sh
